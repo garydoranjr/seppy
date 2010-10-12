@@ -34,7 +34,9 @@ def make_sentence(beginning, tallies):
         if c == 'z':
             sentence += 'and '
         sentence += number_to_word(count)
-        sentence += ' ' + c + "'s"
+        sentence += ' ' + c
+        if count != 1:
+            sentence += "'s"
         if c != 'z':
             sentence += ', '
     sentence += '.'
