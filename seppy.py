@@ -7,6 +7,8 @@ self-enumerating pangram.
 """
 
 import sys
+import random
+from string import ascii_lowercase
 
 op = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
       "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
@@ -15,16 +17,32 @@ tp = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty"
 
 def generate(start):
     last_tallies = {}
+    i = 0
     while True:
         sentence = make_sentence(start, last_tallies)
         tallies = tally(sentence)
         if last_tallies == tallies:
             break
-        last_tallies = tallies
+        i += 1
+        last_tallies = rand_tallies(last_tallies, tallies)
     return sentence
 
+def rand_tallies(last_tallies, new_tallies):
+    ret_val = {}
+    diffs = tally_diffs(last_tallies, new_tallies)
+    for c in ascii_lowercase:
+        diff = diffs[c]
+        if diff < 0:
+            change = random.randint(diff, 0)
+        else:
+            change = random.randint(0, diff)
+        count = 0
+        if c in last_tallies:
+            count = last_tallies[c]
+        ret_val[c] = count + change
+    return ret_val
+
 def make_sentence(beginning, tallies):
-    from string import ascii_lowercase
     sentence = beginning
     for c in ascii_lowercase:
         count = 0
@@ -53,11 +71,25 @@ def number_to_word(number):
 def tally(sentence):
     tallies = {}
     for c in sentence.lower():
+        if not c in ascii_lowercase:
+            continue
         if c in tallies:
             tallies[c] = tallies[c] + 1
         else:
             tallies[c] = 1
     return tallies
+
+def tally_diffs(old_tally, new_tally):
+    diffs = {}
+    for c in ascii_lowercase:
+        old_c = 0
+        if c in old_tally:
+            old_c = old_tally[c]
+        new_c = 0
+        if c in new_tally:
+            new_c = new_tally[c]
+        diffs[c] = new_c - old_c
+    return diffs
 
 def main():
     if len(sys.argv) == 2:
