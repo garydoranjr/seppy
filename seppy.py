@@ -8,6 +8,7 @@ self-enumerating pangram.
 
 import sys
 import random
+import math
 from string import ascii_lowercase
 
 op = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
@@ -24,12 +25,14 @@ def generate(start):
         if last_tallies == tallies:
             break
         i += 1
-        last_tallies = rand_tallies(last_tallies, tallies)
+        last_tallies = rand_tallies(last_tallies, tallies, i % 100 == 0)
     return sentence
 
-def rand_tallies(last_tallies, new_tallies):
+def rand_tallies(last_tallies, new_tallies, disp_dist):
     ret_val = {}
     diffs = tally_diffs(last_tallies, new_tallies)
+    if disp_dist:
+        print_distance(diffs)
     for c in ascii_lowercase:
         diff = diffs[c]
         if diff < 0:
@@ -41,6 +44,13 @@ def rand_tallies(last_tallies, new_tallies):
             count = last_tallies[c]
         ret_val[c] = count + change
     return ret_val
+
+def print_distance(diffs):
+    total = 0
+    for v in diffs.values():
+        total += v*v
+    distance = math.sqrt(total)
+    print ' ' * int(distance) + '*'
 
 def make_sentence(beginning, tallies):
     sentence = beginning
