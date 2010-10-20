@@ -1,0 +1,31 @@
+*********
+* SEPPY *
+*********
+A self-enumerating pangram generator in Python.
+
+*********
+* ABOUT *
+*********
+A pangram is a sentence that contains every letter of the alphabet.
+Self-enumerating pangrams explicitly state the counts of each letter appearing
+in the sentence. The idea for this program comes from the book Metamagical
+Themas by Douglas Hofstadter. If you have the start of a sentence in mind, you
+can append arbitrary initial counts (in a textual format) at the end of the
+sentence. Then, iteratively tally the counts in the current sentence, and then
+rewrite the sentence using those counts. If the counts do not change after some
+iteration, then a stable solution has been found.
+
+The idea is simple, and obviously isn't the most efficient solution, but works
+for a significant number of examples. In this case, some randomness is
+introduced to avoid possible cycles that don't converge to a solution.
+
+*********
+* USAGE *
+*********
+To use the program, use a single argument that starts the sentence. For example:
+
+    ./seppy.py "This pangram contains "
+
+The output indicates the distance between iterations (euclidean distance
+treating counts from two consecutive iterations as vectors). The program might
+not ever converge to a solution.
